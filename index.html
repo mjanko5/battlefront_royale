@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Battlefront Royale</title>
+</head>
+
+<body>
+
+    <canvas id="gameCanvas" width="1050" height="650">
+        <script>
+            var background = new Image();
+            background.src = "back_image.jpg";
+            var bird = new Image();
+            bird.src = "bird.png";
+            var x = 10, y = 200; //starting position
+            var c = document.getElementById("gameCanvas"); //canvas   
+            var ctx = c.getContext("2d");
+            ctx.fillStyle = "black";
+            
+            ctx.font = "bold 20px Arial";
+
+            function draw() {
+                // clear the canvas
+                ctx.clearRect(0, 0, c.width, c.height);
+                // draw the background image
+                ctx.drawImage(background, 0, 0, 1050, 650);
+                
+                //display some text:
+                var score = 7;
+                var lives = 5;
+                var level = 3;
+                ctx.fillText("Score: " + score, 900, 30);
+                ctx.fillText("Lives: " + lives, 900, 60);
+                ctx.fillText("Level: " + level, 900, 90);
+                
+                // start a new path;  
+                //  comment out begin and close path to see what happens
+                ctx.beginPath();
+                //  a circle at the coordinates
+                ctx.drawImage(bird, x, y, 60, 60)
+                // increment coord to "move" l to r
+                y += 2;
+                // handle edge condition
+                if(y > c.height) {
+                    y -= c.height;
+                }
+                // recursive -> call again when available
+                window.requestAnimationFrame(draw);
+            }
+             // kick it off
+            window.requestAnimationFrame(draw);
+            
+            
+
+        </script>
+        
+        <script>
+            $(document).ready(function() {
+                //event handler:
+
+                $("#gameCanvas").on("click", function(e){
+
+                   console.log(e); 
+                });
+            }
+        </script>
+
+    </canvas>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+
+<body>
+    <canvas id="myCanvas" width="1000" height="600" style="border:4px solid #0000ff;">
+        Nice try, but... your browser does not support the canvas element...:(
+    </canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "blue";
+        ctx.arc(400, 200, 50, 0, 2 * Math.PI);
+        ctx.arc(200, 200, 30, 0, 2 * Math.PI);
+        ctx.stroke();
+         //         ctx.fill();
+
+        
+        
+        
+        ctx.beginPath();
+        ctx.arc(95, 50, 40, 0, 2 * Math.PI);
+        ctx.arc(104, 100, 50, 0, 2 * Math.PI);
+        ctx.stroke();
+    </script>
+
+
+</body>
+
+</html>
