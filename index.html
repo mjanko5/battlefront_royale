@@ -8,16 +8,58 @@
 <body>
 
     <canvas id="gameCanvas" width="1050" height="650">
+
+
+        
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js" 
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
+        crossorigin="anonymous"></script>
+
         <script>
+            
+            //attach event handler:
+            function attatchKeyDownHandler(){
+                $(window).on("keydown", function(e){
+
+                    console.log(e);
+                    e.preventDefault(); 
+
+                    switch(e.key){
+                        case "ArrowRight":
+                            console.log("case ArrowRight");
+                            x += 5;
+                            break;
+                        case "ArrowLeft":
+                            console.log("case ArrowLeft");
+                            x -= 5;
+                            break;
+                        case "ArrowUp":
+                            console.log("case ArrowUp");
+                            y -= 5;
+                            break;
+                        case "ArrowDown":
+                            console.log("case ArrowDown");
+                            y += 5;
+                            break;
+                        default:
+                            console.log("default");
+                            break;	
+                    }
+                });
+            }
+            
+            
+            
             var background = new Image();
-            background.src = "back_image.jpg";
             var bird = new Image();
+            background.src = "back_image.jpg";
             bird.src = "bird.png";
-            var x = 10, y = 200; //starting position
+            var x = 10,
+                y = 200; //starting position
             var c = document.getElementById("gameCanvas"); //canvas   
             var ctx = c.getContext("2d");
             ctx.fillStyle = "black";
-            
             ctx.font = "bold 20px Arial";
 
             function draw() {
@@ -25,7 +67,6 @@
                 ctx.clearRect(0, 0, c.width, c.height);
                 // draw the background image
                 ctx.drawImage(background, 0, 0, 1050, 650);
-                
                 //display some text:
                 var score = 7;
                 var lives = 5;
@@ -33,14 +74,12 @@
                 ctx.fillText("Score: " + score, 900, 30);
                 ctx.fillText("Lives: " + lives, 900, 60);
                 ctx.fillText("Level: " + level, 900, 90);
-                
                 // start a new path;  
                 //  comment out begin and close path to see what happens
                 ctx.beginPath();
                 //  a circle at the coordinates
                 ctx.drawImage(bird, x, y, 60, 60)
-                // increment coord to "move" l to r
-                y += 2;
+                
                 // handle edge condition
                 if(y > c.height) {
                     y -= c.height;
@@ -48,23 +87,15 @@
                 // recursive -> call again when available
                 window.requestAnimationFrame(draw);
             }
+            console.log("hi");
+
+            //attatch handler:
+            attatchKeyDownHandler();
+           
              // kick it off
             window.requestAnimationFrame(draw);
-            
-            
-
         </script>
-        
-        <script>
-            $(document).ready(function() {
-                //event handler:
 
-                $("#gameCanvas").on("click", function(e){
-
-                   console.log(e); 
-                });
-            }
-        </script>
 
     </canvas>
 </body>
