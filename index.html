@@ -1,3 +1,5 @@
+<!-- To God be the Glory -->
+
 <!DOCTYPE html>
 <html>
 
@@ -7,7 +9,7 @@
 
 <body>
 
-    <canvas id="gameCanvas" width="1050" height="650">
+    <canvas id="gameCanvas" width="1080" height="650"> 
 
 
         
@@ -18,81 +20,295 @@
 
         <script>
             
-            //attach event handler:
-            function attatchKeyDownHandler(){
+            //attatch event handler:
+            function moveSpriteOnKeydown(){
                 $(window).on("keydown", function(e){
-
-                    console.log(e);
+//                     console.log(e);
                     e.preventDefault(); 
 
                     switch(e.key){
-                        case "ArrowRight":
-                            console.log("case ArrowRight");
-                            x += 5;
-                            break;
-                        case "ArrowLeft":
-                            console.log("case ArrowLeft");
-                            x -= 5;
-                            break;
+//                         case "ArrowRight":
+//                             bird_x += bird_move;
+//                             break;
+//                         case "ArrowLeft":
+//                             bird_x -= bird_move;
+//                             break;
                         case "ArrowUp":
-                            console.log("case ArrowUp");
-                            y -= 5;
+                            bird_y -= bird_move;
                             break;
                         case "ArrowDown":
-                            console.log("case ArrowDown");
-                            y += 5;
+                            bird_y += bird_move;
                             break;
+                        case "1": //start man
+                            if (man_state != 1) man_state = 1;
+                            else man_state = 0;
+                            break;
+                        case "2": //start slime
+                            if (slime_state != 1) slime_state = 1;
+                            else slime_state = 0;
+                            
                         default:
-                            console.log("default");
                             break;	
                     }
                 });
             }
             
+            //show x and y coordinates of a clicked pixel
+            function showCoordOnClick(){
+                 $(window).on("click", function(e){
+                    console.log(e.pageX + ", " + e.pageY);
+                 });
+                
+            }
+            
+            //get random integer in range
+            function getRandomIntInclusive(min, max) {
+              min = Math.ceil(min);
+              max = Math.floor(max);
+              return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+            }
+            
+            //INIT IMAGE VARS:
+            let background = new Image();
+            let bird = new Image();
+            let slime = new Image();
+            let man = new Image();
+            let b1 = new Image();
+            let b2 = new Image();
+            let b3 = new Image();
+            let random_y1 = 300, random_y2 = 410, random_y3 = 500;
             
             
-            var background = new Image();
-            var bird = new Image();
+            //SET IMAGES:
             background.src = "back_image.jpg";
             bird.src = "bird.png";
-            var x = 10,
-                y = 200; //starting position
-            var c = document.getElementById("gameCanvas"); //canvas   
-            var ctx = c.getContext("2d");
+            slime.src = "slime.png";
+            man.src = "man.png";
+            b1.src = "black_dot.png";
+            b2.src = "black_dot.png";
+            b3.src = "black_dot.png";
+            
+            //INIT VARS:
+            let bird_x = 20, bird_y = 20, bird_width = 60, bird_height = 60, bird_move = 20;
+            let slime_x = 702, slime_y = 78, slime_width = 200, slime_height = 200, slime_speed = 4;
+            let man_x = 246, man_y = 91, man_width = 73, man_height = 104, man_speed = 5; //original w + h
+            let b1_x = 998, b1_y = 224, b1_width = 55, b1_height = 16, b1_speed = 3; //12
+            let b2_x = 698, b2_y = 324, b2_width = 55, b2_height = 16, b2_speed = 4; //15
+            let b3_x = 798, b3_y = 424, b3_width = 55, b3_height = 16, b3_speed = 5; //10
+            
+            let man_state = -1;
+            let slime_state = -1;
+            let score = 100;
+            let lives = 5;
+            let level = 1;
+            
+            //CANVAS INIT:
+            let c = document.getElementById("gameCanvas");
+            let ctx = c.getContext("2d");
+            
+            //STYLES:
             ctx.fillStyle = "black";
             ctx.font = "bold 20px Arial";
+            
+            //ATTATCH HANDLERS:
+            moveSpriteOnKeydown();
+            showCoordOnClick();
 
+            //DRAW LOOP:
             function draw() {
+                                
+                
                 // clear the canvas
                 ctx.clearRect(0, 0, c.width, c.height);
                 // draw the background image
-                ctx.drawImage(background, 0, 0, 1050, 650);
+                ctx.drawImage(background, 0, 0, 1080, 650);
                 //display some text:
-                var score = 7;
-                var lives = 5;
-                var level = 3;
-                ctx.fillText("Score: " + score, 900, 30);
+                ctx.fillText("Score: " + score + " / 500", 900, 30);
                 ctx.fillText("Lives: " + lives, 900, 60);
                 ctx.fillText("Level: " + level, 900, 90);
-                // start a new path;  
-                //  comment out begin and close path to see what happens
-                ctx.beginPath();
-                //  a circle at the coordinates
-                ctx.drawImage(bird, x, y, 60, 60)
                 
-                // handle edge condition
-                if(y > c.height) {
-                    y -= c.height;
+                //  draw images
+                ctx.drawImage(bird, bird_x, bird_y, bird_width, bird_height);
+                ctx.drawImage(slime, slime_x, slime_y, slime_width, slime_height);
+                ctx.drawImage(man, man_x, man_y, man_width, man_height);
+                ctx.drawImage(b1, b1_x, random_y1, b1_width, b1_height);
+                ctx.drawImage(b2, b2_x, random_y2, b2_width, b2_height);
+                ctx.drawImage(b3, b3_x, random_y3, b3_width, b3_height);
+
+                
+                //BIRD
+                // handle edge conditions
+//                 if(bird_y > c.height) { 
+                    
+//                     bird_y -= c.height;
+//                     console.log("bird_y before: " + bird_y);
+//                     console.log("bird_height: " + bird_height);
+//                     bird_y = bird.height;
+                    
+//                     console.log("bird_y after: " + bird_y);
+//                     console.log("bird_height: "  + bird_height);
+//                     System.exit(0);
+//                 }
+                if(bird_y + bird_height < 0){
+                    bird_y += c.height + bird.height;
                 }
+                
+                //SLIME
+//                 console.log("slime_state = " + slime_state);
+                if (slime_state == 1){
+                    slime_x += slime_speed;
+                }
+                
+                else if(slime_state == 0){ //return slime to original position
+                    if(slime_x != 702){
+                        slime_x += slime_speed;
+                    }
+                    else{
+                        slime_state = -1;
+                    }
+                }
+                
+                if (slime_x > c.width){
+                    slime_x -= c.width;
+                    slime_x -= slime_width;
+                }
+                
+                //MAN
+//                 console.log("man_state = " + man_state);
+                if (man_state == 1){
+                    man_x -= man_speed;
+                }
+                
+                else if(man_state == 0){ //return man to original position
+                    if(man_x != 246){
+                        man_x -= man_speed;
+                    }
+                    else{
+                        man_state = -1;
+                    }
+                }
+                
+                if (man_x < 0 - man_width){ //hits the left wall: reset to right wall
+                    man_x += c.width;
+                }
+                
+                //B1
+                b1_x -= b1_speed;
+                if (b1_x < 0 - b1_width){ //hits the left wall: reset to right wall
+                    b1_x += c.width;
+                    random_y1 = getRandomIntInclusive(0,c.height); //move to random y
+                }
+                
+                //B2
+                b2_x -= b2_speed;
+                if (b2_x < 0 - b2_width){ //hits the left wall: reset to right wall
+                    b2_x += c.width;
+                    random_y2 = getRandomIntInclusive(0,c.height); //move to random y
+                }
+                
+                //B3
+                b3_x -= b3_speed;
+                if (b3_x < 0 - b3_width){ //hits the left wall: reset to right wall
+                    b3_x += c.width;
+                    random_y3 = getRandomIntInclusive(0,c.height); //move to random y
+                }
+                
+                
+                // function to get distance between two points
+                const euclidianDistance = (x1, y1, x2, y2) => {
+                    let xDist = x1 - x2;
+                    let yDist = y1 - y2;
+                    return Math.sqrt( xDist * xDist + yDist * yDist );
+                };
+                
+                // function to get the center coordinates of an image
+                const imageCenter = (x, y, width, height) => {
+                    let center_x = x + width/2;
+                    let center_y = y + height/2;
+                    let center_coord = [center_x, center_y];
+                    
+                    return center_coord;
+                };
+                
+                
+                /* function to get radius of an image
+                assume that we can deal with all images as if they were circles with radii.
+                thus, assume the "radius" of an image is width/2. */
+                const radius = width => width/2;
+                
+                
+                //handle collisions
+                bird_center  = imageCenter(bird_x, bird_y, bird_width, bird_height);
+                man_center   = imageCenter(man_x, man_y, man_width, man_height);
+                slime_center = imageCenter(slime_x, slime_y, slime_width, slime_height);
+                b1_center = imageCenter(b1_x, b1_y, b1_width, b1_height);
+                b2_center = imageCenter(b2_x, b2_y, b2_width, b2_height);
+                b3_center = imageCenter(b3_x, b3_y, b3_width, b3_height);
+                
+                //if distance between bird and man is less than sum of radii --> collision.
+                if(radius(man_width) + radius(bird_width) 
+                   >= euclidianDistance(bird_center[0], bird_center[1], man_center[0], man_center[1])){
+                    score++;
+                    console.log("man collision.");
+                }
+                
+                //if distance between bird and slime is less than sum of radii --> collision.
+                if(radius(slime_width) + radius(bird_width) 
+                   >= euclidianDistance(bird_center[0], bird_center[1], slime_center[0], slime_center[1])){
+                    score--;
+                    console.log("slime collision.");
+                }
+                
+                //if distance between bird and b1 is less than sum of radii --> collision.
+                if(radius(b1_width) + radius(bird_width) 
+                   >= euclidianDistance(bird_center[0], bird_center[1], b1_center[0], b1_center[1])){
+                    score -= 10;
+                    b1_x -= b1_width;
+                    console.log("b1 collision.");
+                }
+                
+                //if distance between bird and b2 is less than sum of radii --> collision.
+                if(radius(b2_width) + radius(bird_width) 
+                   >= euclidianDistance(bird_center[0], bird_center[1], b2_center[0], b2_center[1])){
+                    score -= 10;
+                    b2_x -= b2_width;
+                    console.log("b2 collision.");
+                }     
+                
+                //if distance between bird and b3 is less than sum of radii --> collision.
+                if(radius(b3_width) + radius(bird_width) 
+                   >= euclidianDistance(bird_center[0], bird_center[1], b3_center[0], b3_center[1])){
+                    score -= 10;
+                    b3_x -= b3_width;
+                    console.log("b3 collision.");
+                }  
+                
+                
+                //HANDLE SCORES, LIVES, AND LEVELS
+                if (score >= 500){
+                    console.log ("level up!");
+                    level++;
+                    score = 100;   
+                }
+                if (score <= 0){
+                    console.log ("lost a life");
+                    lives --;
+                    score = 100;
+                    
+                }
+                if (lives == 0){
+                    console.log("game over.");
+                    cancelAnimationFrame(draw); //exit...
+                    
+                }
+                
+                
                 // recursive -> call again when available
                 window.requestAnimationFrame(draw);
-            }
-            console.log("hi");
+            } //end draw loop
 
-            //attatch handler:
-            attatchKeyDownHandler();
            
-             // kick it off
+            //KICK IT OFF:
             window.requestAnimationFrame(draw);
         </script>
 
