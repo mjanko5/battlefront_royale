@@ -9,6 +9,8 @@ Instructions:
 * Green pucks are benefit objects: gain +10 points when hit. 100 points is level up.
 * Pass 3 levels to win, but watch out for increasing speeds at each level!
 
+Possible enhancements:
+* Create a timer, and keep a high score for plays with lowest time.
 
 Enjoy
 
